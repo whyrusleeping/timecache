@@ -13,11 +13,21 @@ type TimeCache struct {
 }
 
 func NewTimeCache(span time.Duration) *TimeCache {
-	return &TimeCache{
+	tc := &TimeCache{
 		Q:    list.New(),
 		M:    make(map[string]time.Time),
 		span: span,
 	}
+
+	// periodically sweep
+	go func() {
+		for {
+			tc.sweep()
+			time.Sleep(tc.span)
+		}
+	}()
+
+	return tc
 }
 
 func (tc *TimeCache) Add(s string) {

@@ -27,3 +27,18 @@ func TestEntriesExpire(t *testing.T) {
 		t.Fatal("should have dropped this from the cache already")
 	}
 }
+
+func TestEntriesExpirePeriodically(t *testing.T) {
+	tc := NewTimeCache(time.Millisecond)
+	tc.Add("test")
+
+	if !tc.Has("test") {
+		t.Fatal("should have this key")
+	}
+
+	time.Sleep(time.Millisecond)
+
+	if tc.Has("test") {
+		t.Fatal("should have dropped this from the cache already")
+	}
+}
